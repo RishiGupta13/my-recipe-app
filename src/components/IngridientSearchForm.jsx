@@ -1,10 +1,8 @@
 import axios from "axios";
-import  { useEffect, useState } from "react";
-import { useSelector,useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { setMeals, setMatchingMeals } from "../utils/mealSlice";
 import { useNavigate } from "react-router-dom";
-
-
 
 export const IngridientSearchForm = () => {
   const [recipeList, setRecipeList] = useState([]);
@@ -14,7 +12,7 @@ export const IngridientSearchForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const meals = useSelector((state) => state.meal.meals);
-  const mealsList=useSelector((state)=>state.meal.matchingMeals);
+  const mealsList = useSelector((state) => state.meal.matchingMeals);
   const [ingredient, setIngredient] = useState("");
 
   useEffect(() => {
@@ -31,7 +29,7 @@ export const IngridientSearchForm = () => {
 
         setRecipeList(sortedIngredients);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
     fetchData();
@@ -40,33 +38,30 @@ export const IngridientSearchForm = () => {
   useEffect(() => {
     console.log(mealsList);
   }, [mealsList]);
-  
 
   const fetchRecipeList = async () => {
     try {
       const data = await fetch(
         "https://www.themealdb.com/api/json/v1/1/filter.php?i=" + ingredient
       );
-      const jsondata=await data.json();
+      const jsondata = await data.json();
       dispatch(setMatchingMeals(jsondata));
       setmealList(jsondata);
     } catch (err) {
       console.log(err);
     }
   };
-  
+
   const onSearch = () => {
-      let new_ingredient=ingredient.replace(/ /g,"_");
-      setIngredient(new_ingredient);
-      fetchRecipeList();
-      navigate("recipe-list");
+    let new_ingredient = ingredient.replace(/ /g, "_");
+    setIngredient(new_ingredient);
+    fetchRecipeList();
+    navigate("recipe-list");
   };
 
-  
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = meals.slice(indexOfFirstItem, indexOfLastItem);
-
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -74,19 +69,24 @@ export const IngridientSearchForm = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-6 rounded-lg shadow-md w-full md:w-3/4 lg:w-2/3">
         <h1 className="text-3xl font-semibold mb-4 text-center">Ingredient List</h1>
-        <div className="flex ml-60 mb-4 mt-4">
-            <input className="px-4 py-2 border rounded-l focus:outline-none focus:ring focus:border-blue-500"
+        <div className="mb-4 mt-4">
+          <input
+            className="w-full px-4 py-2 border rounded-l focus:outline-none focus:ring focus:border-blue-500"
             type="text"
             placeholder="Search ingredient"
             value={ingredient}
-            onChange={(e) => setIngredient(e.target.value)}></input>
-            <button
-              onClick={onSearch}
-             className="px-4 py-2 bg-blue-500 text-white rounded-r hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-700">Search</button>
+            onChange={(e) => setIngredient(e.target.value)}
+          />
         </div>
-        <ul className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
+        <button
+          onClick={onSearch}
+          className="w-full bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-700"
+        >
+          Search
+        </button>
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
           {currentItems.map((ingredient) => (
             <li key={ingredient.idIngredient} className="border p-2 rounded">
               {ingredient.strIngredient}

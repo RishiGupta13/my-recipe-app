@@ -3,11 +3,33 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { IngridientSearchForm } from './components/IngridientSearchForm';
+import { RecipeDetails } from './components/RecipeDetails';
+import { RecipeList } from './components/RecipeList';
+const appRouter=createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <IngridientSearchForm />,
+      },
+      { path: "/recipe-list", element: <RecipeList /> },
+      {
+        path: "/recipe-details/:id",
+        element: <RecipeDetails />,
+      },
+    ],
+  }
+]);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={appRouter}/>
   </React.StrictMode>
 );
 
